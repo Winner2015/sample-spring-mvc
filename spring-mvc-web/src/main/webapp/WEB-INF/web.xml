@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <display-name>springMVC</display-name>
+
+    <servlet>
+        <servlet-name>springMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:springMVC-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+    <!-- DispatcherServlet在初始化时会在WEB-INF目录下查找一个配置文件，默认的命名规则是"servletName-servlet.xml"，
+    例如 springMVC-servlet.xml。-->
+
+
+    <servlet-mapping>
+        <servlet-name>springMVC</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Spring核心监听器，默认会以 /WEB-INF/applicationContext.xml作为配置文件 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+
+    <!--ContextLoaderListener的作用就是启动Web容器时，读取在contextConfigLocation中定义的xml文件，
+        自动装配ApplicationContext的配置信息，并产生WebApplicationContext对象，
+        然后将这个对象放置在ServletContext的属性里，这样我们只要得到Servlet就可以得到WebApplicationContext对象，
+        并利用这个对象访问spring容器管理的bean。
+        简单来说，就是上面这段配置为项目提供了spring支持，初始化了Ioc容器。 -->
+
+</web-app>

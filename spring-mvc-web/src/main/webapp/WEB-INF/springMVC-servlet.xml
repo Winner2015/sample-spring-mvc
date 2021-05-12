@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--启用spring的一些annotation -->
+    <context:annotation-config/>
+    <context:component-scan base-package="clf.winner.spring.mvc.web"/>
+    <!--Spring容器与MVC容器是父子关系，这里的base-package应该只划分到web部分，
+        而Spring的配置中base-package才应该包含全部 -->
+
+    <!-- 配置注解驱动 可以将request参数与绑定到controller参数上 -->
+    <mvc:annotation-driven/>
+
+
+
+    <!-- 视图解析器的作用：从控制器方法中返回的逻辑视图名，会被加上前缀、后缀，拼接成资源路径
+         例如："myView" -> "/WEB-INF/jsp/myView.jsp"
+    -->
+
+    <!-- JSP视图解析器 -->
+    <bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+
+        <!--如果在JSP中使用JSTL标签，会将视图解析为JstlView-->
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="exposeContextBeansAsAttributes" value="true"/>
+    </bean>
+
+    <!-- 配置freeMarker视图解析器 -->
+    <bean id="viewResolverFtl" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="contentType" value="text/html; charset=UTF-8"/>
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="true" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="cache" value="true" />
+        <property name="suffix" value=".ftl" />
+        <property name="order" value="0"/>
+    </bean>
+
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/views/"/>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="xml_escape" value-ref="fmXmlEscape" />
+            </map>
+        </property>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">3600</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="number_format">#.##</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+
+    <!--静态资源映射-->
+    <!--本项目把静态资源放在了webapp的statics目录下，资源映射如下-->
+    <mvc:resources mapping="/css/**" location="/static/css/"/>
+    <mvc:resources mapping="/js/**" location="/static/js/"/>
+    <mvc:resources mapping="/image/**" location="/static/images/"/>
+
+
+    <mvc:default-servlet-handler />  <!--这句要加上，要不然可能会访问不到静态资源，具体作用自行百度-->
+
+
+
+
+
+
+
+<!--    1、springmvc的servlet的配置中'/'和'/*'有什么区别?
+        '/*'是拦截了所有的请求，包括视图解析后跳转的.jsp页面，'/'则不会拦截视图解析后的jsp页面
+
+        2、<mvc:default-servlet-handler />的作用是什么?
+        一个默认的servlet，主要作用去找静态的资源。总结一下就是：servlet在找页面时，走的是dispatcherServlet路线，
+        找不到的时候会报404，加上这个默认的servlet时候，servlet在找不到的时候会去找静态的内容
+-->
+
+
+
+</beans>
