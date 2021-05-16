@@ -3,9 +3,9 @@ package clf.winner.spring.mvc.service;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TestService {
+public class EchoService {
 
-    public String getName () {
-        return "Winner";
+    public String echo () {
+        return "Hello World";
     }
 }

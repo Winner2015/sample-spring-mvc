@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 自定义属性，通过${}访问 -->
+    <property name="filePath" value="logs/" />
+    <property name="logPattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 滚动策略-1： TimeBasedRollingPolicy -->
+    <appender name="FILE_timeBased" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${filePath}/.timeBased.log</file>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- fileNamePattern属性设置滚动生成文件的格式,这里设置的精确到天，也就是按照天滚动 -->
+            <fileNamePattern>${filePath}/.timeBased-%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- 设定最大的文件数，比如按天滚动，这里设置了30天，在第31天日志生成的时候，第一天的日志就会被删掉 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 滚动策略-2： SizeAndTimeBasedRollingPolicy -->
+    <appender name="FILE_sizeAndTimeBased" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${filePath}/.sizeAndTimeBased.log</file>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- %i 是必须要加上去的，是单个日志文件超大小后的切割序号 -->
+            <fileNamePattern>${filePath}/.sizeAndTimeBased-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+            <!-- 日志保留30天，日志文件最大为20M -->
+            <maxHistory>30</maxHistory>
+            <maxFileSize>20MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 滚动策略-3： FixedWindowRollingPolicy -->
+    <appender name="FILE_fixedWindow" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${filePath}/.fixedWindow.log</file>
+        <encoder>SizeBasedTriggeringPolicy
+            <pattern>${logPattern}</pattern>
+        </encoder>
+
+        <!-- 设置为按照索引的方式滚动，定义文件名称的时候使用%i作为占位符，滚动后会会用角标替换 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${filePath}/.fixedWindow-%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+        </rollingPolicy>
+
+        <!-- 指定文件最大尺寸，达到该尺寸，就触发rollingPolicy对应的策略，maxFileSize属性指定文件大小 -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>1MB</maxFileSize>
+        </triggeringPolicy>
+
+    </appender>
+
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE_timeBased" />
+        <appender-ref ref="FILE_sizeAndTimeBased" />
+        <appender-ref ref="FILE_fixedWindow" />
+    </root>
+</configuration>
