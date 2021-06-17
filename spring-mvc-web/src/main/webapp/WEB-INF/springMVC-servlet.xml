@@ -43,6 +43,8 @@
         <property name="exposeRequestAttributes" value="true" />
         <property name="exposeSessionAttributes" value="true" />
         <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="allowRequestOverride" value="true" />
+        <property name="allowSessionOverride" value="true" />
         <property name="cache" value="true" />
         <property name="suffix" value=".ftl" />
         <property name="order" value="0"/>
