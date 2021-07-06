@@ -62,6 +62,13 @@
 
 <hr/>
 
+<form action="/paramPass/byRequestBody" method="post">
+  <p>姓名: <input type="text" name="name" value="魔杰"/></p>
+  <p>年龄: <input type="text" name="age" value="102"/></p>
+  <input type="submit" value="传参-@RequestBody" />
+</form>
+
+<hr/>
 
 
 </body>

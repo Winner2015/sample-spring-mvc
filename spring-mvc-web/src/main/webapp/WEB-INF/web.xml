@@ -46,6 +46,10 @@
     例如 springMVC-servlet.xml。-->
 
 
+
+    <!-- '/'和'/*'有什么区别?
+        '/*'是拦截了所有的请求，包括视图解析后跳转的.jsp页面;
+        '/'则不会拦截视图解析后的jsp页面 -->
     <servlet-mapping>
         <servlet-name>springMVC</servlet-name>
         <url-pattern>/</url-pattern>

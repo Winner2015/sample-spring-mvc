@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+/**
+ * 参数传递
+ */
 @SessionAttributes(value={"sessionUser"})
 @Controller
 @RequestMapping("/paramPass")
@@ -24,6 +26,7 @@ public class ParamPassController {
         return "paramPassInit";
     }
 
+    //请求参数——》方法形参，基本类型
     @RequestMapping(value="/byDefault")
     public String byAutoMatch(String name, Integer age, Model model) {
         logger.info("========byDefault========");
@@ -35,6 +38,7 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
+    //请求参数——》对象的属性
     @RequestMapping(value="/byDefault2")
     public String byDefault2(User user, Model model) {
         logger.info("========byDefault2========");
@@ -46,6 +50,7 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
+    //请求参数——》方法形参，更灵活
     @RequestMapping(value="/byRequestParam")
     public String byRequestParam(@RequestParam(value = "myName", required = true) String name, @RequestParam Integer age, Model model) {
         logger.info("========byRequestParam========");
@@ -57,6 +62,7 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
+    //路径参数——》方法形参
     @RequestMapping(value="/byPathVariable/{myName}/{age}")
     public String byPathVariable(@PathVariable("myName") String name, Integer age, Model model) {
         logger.info("========byPathVariable========");
@@ -68,6 +74,7 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
+    //通过原始的HttpServletRequest获取参数
     @RequestMapping(value="/byHttpServletRequest")
     public String byHttpServletRequest(HttpServletRequest request, HttpServletResponse response, Model model) {
 
@@ -83,6 +90,7 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
+    //将request域中的参数，再添加到response当中
     @RequestMapping(value="/byModelAttribute")
     public String byModelAttribute(@ModelAttribute("user") User user, Model model) {
         logger.info("========byModelAttribute========");
@@ -131,7 +139,7 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
-
+    //获取Cookie中的参数
     @RequestMapping(value="/byCookieValue")
     public String byCookieValue(@CookieValue("JSESSIONID") String sessionId, Model model) {
         logger.info("========byCookieValue========");
@@ -140,6 +148,7 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
+    //获取请求头中的参数
     @RequestMapping(value="/byRequestHeader")
     public String byRequestHeader(@RequestHeader(value = "Content-Type", defaultValue = "application/json") String contentType, Model model) {
         logger.info("========byRequestHeader========");
@@ -148,6 +157,16 @@ public class ParamPassController {
         return "paramPassResult";
     }
 
+    //请求参数——》对象的属性
+    @RequestMapping(value="/byRequestBody")
+    public String byRequestBody(@RequestBody User user, Model model) {
+        logger.info("========byRequestBody========");
+        logger.info("name: " + user.getName() + ", age: " + user.getAge());
+
+        model.addAttribute("user", user);
+
+        return "paramPassResult";
+    }
 
 }
 

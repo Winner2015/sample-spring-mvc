@@ -20,7 +20,6 @@
     <mvc:annotation-driven/>
 
 
-
     <!-- 视图解析器的作用：从控制器方法中返回的逻辑视图名，会被加上前缀、后缀，拼接成资源路径
          例如："myView" -> "/WEB-INF/jsp/myView.jsp"
     -->
@@ -72,31 +71,24 @@
     </bean>
 
 
-
-
     <!--静态资源映射-->
-    <!--本项目把静态资源放在了webapp的statics目录下，资源映射如下-->
-    <mvc:resources mapping="/css/**" location="/static/css/"/>
-    <mvc:resources mapping="/js/**" location="/static/js/"/>
-    <mvc:resources mapping="/image/**" location="/static/images/"/>
+
+<!--    <mvc:resources mapping="/image/**" location="/static/images/"/>-->
+
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/">
+        <mvc:resource-chain resource-cache="false" auto-registration="false">
+            <mvc:resolvers>
+                <bean class="org.springframework.web.servlet.resource.WebJarsResourceResolver"></bean>
+                <bean class="org.springframework.web.servlet.resource.PathResourceResolver"></bean>
+            </mvc:resolvers>
+        </mvc:resource-chain>
+    </mvc:resources>
 
 
-    <mvc:default-servlet-handler />  <!--这句要加上，要不然可能会访问不到静态资源，具体作用自行百度-->
-
-
-
-
-
-
-
-<!--    1、springmvc的servlet的配置中'/'和'/*'有什么区别?
-        '/*'是拦截了所有的请求，包括视图解析后跳转的.jsp页面，'/'则不会拦截视图解析后的jsp页面
-
-        2、<mvc:default-servlet-handler />的作用是什么?
-        一个默认的servlet，主要作用去找静态的资源。总结一下就是：servlet在找页面时，走的是dispatcherServlet路线，
+    <mvc:default-servlet-handler />
+    <!-- 一个默认的servlet，主要作用去找静态的资源。
+        总结一下就是：servlet在找页面时，走的是dispatcherServlet路线，
         找不到的时候会报404，加上这个默认的servlet时候，servlet在找不到的时候会去找静态的内容
--->
-
-
+    -->
 
 </beans>
