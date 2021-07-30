@@ -17,7 +17,47 @@
         而Spring的配置中base-package才应该包含全部 -->
 
     <!-- 配置注解驱动 可以将request参数与绑定到controller参数上 -->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven conversion-service="conversionService">
+
+        <!--注册JSON转换器 -->
+        <mvc:message-converters>
+
+            <bean class="clf.winner.spring.mvc.web.converter.CustomHttpMessageConverter"/>
+
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper" ref="objectMapper"/>
+
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json; charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+
+    </mvc:annotation-driven>
+
+    <bean id="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+        <property name="simpleDateFormat" value="yyyy-MM-dd HH:mm:ss" />
+        <property name="failOnUnknownProperties" value="false" />
+        <property name="indentOutput" value="false" />
+    </bean>
+
+
+    <!-- 注册自定义的转换器 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <list>
+                <bean class="clf.winner.spring.mvc.web.converter.CustomFormatter"></bean>
+            </list>
+        </property>
+        <property name="converters">
+            <list>
+                <bean class="clf.winner.spring.mvc.web.converter.CustomConverter"></bean>
+            </list>
+        </property>
+    </bean>
 
 
     <!-- 视图解析器的作用：从控制器方法中返回的逻辑视图名，会被加上前缀、后缀，拼接成资源路径
@@ -72,9 +112,7 @@
 
 
     <!--静态资源映射-->
-
 <!--    <mvc:resources mapping="/image/**" location="/static/images/"/>-->
-
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/">
         <mvc:resource-chain resource-cache="false" auto-registration="false">
             <mvc:resolvers>
@@ -90,5 +128,13 @@
         总结一下就是：servlet在找页面时，走的是dispatcherServlet路线，
         找不到的时候会报404，加上这个默认的servlet时候，servlet在找不到的时候会去找静态的内容
     -->
+    
+<!--    <mvc:interceptors>-->
+
+<!--    </mvc:interceptors>-->
+
+
+
+
 
 </beans>
