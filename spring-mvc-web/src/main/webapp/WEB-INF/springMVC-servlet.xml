@@ -128,13 +128,40 @@
         总结一下就是：servlet在找页面时，走的是dispatcherServlet路线，
         找不到的时候会报404，加上这个默认的servlet时候，servlet在找不到的时候会去找静态的内容
     -->
-    
-<!--    <mvc:interceptors>-->
 
-<!--    </mvc:interceptors>-->
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <!-- 配置全局拦截器，拦截所有请求 -->
+<!--        <bean class="xxx.TestInterceptor" />-->
+        <mvc:interceptor>
+            <!-- 配置拦截器作用的路径 -->
+            <mvc:mapping path="/**" />
+            <!-- 配置不需要拦截作用的路径 -->
+            <mvc:exclude-mapping path="" />
+            <!-- 定义<mvc:interceptor>元素中，表示匹配指定路径的请求才进行拦截 -->
+            <bean class="clf.winner.spring.mvc.web.interceptor.AccessLogInterceptor" />
+        </mvc:interceptor>
+
+    </mvc:interceptors>
 
 
+    <!-- 自定义异常处理器 -->
+    <bean class="clf.winner.spring.mvc.web.exception.handler.ArithmeticExceptionResolver"></bean>
 
+    <!-- 自定义异常处理器 -->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <!-- 定义默认的异常处理页面，当该异常类型注册时使用 -->
+        <property name="defaultErrorView" value="error"></property>
+        <!-- 定义异常处理页面用来获取异常信息的变量名，默认名为exception -->
+        <property name="exceptionAttribute" value="msg"></property>
+        <!-- 定义需要特殊处理的异常，用类名或完全路径名作为key，异常页名作为值 -->
+<!--        <property name="exceptionMappings">-->
+<!--            <props>-->
+<!--                <prop key="ArithmeticException">error</prop>-->
+<!--                &lt;!&ndash; 在这里还可以继续扩展对不同异常类型的处理 &ndash;&gt;-->
+<!--            </props>-->
+<!--        </property>-->
+    </bean>
 
 
 </beans>
